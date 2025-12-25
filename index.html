@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AltShield - Зимний Форум</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a1428 0%, #0c1e2e 50%, #07121e 100%);
+            color: #f0f9ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Улучшенная анимация снега */
+        .snowflakes {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: rgba(255, 255, 255, 0.9);
+            animation: snowfall linear infinite;
+            filter: blur(0.5px);
+        }
+        
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-100px) rotate(0deg) translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh + 100px)) rotate(360deg) translateX(50px);
+                opacity: 0;
+            }
+        }
+        
+        /* Glassmorphism header */
+        .header {
+            position: relative;
+            z-index: 1;
+            background: rgba(10, 25, 47, 0.25);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border-bottom: 1px solid rgba(100, 200, 255, 0.15);
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #e6f7ff 0%, #a0d8ff 50%, #5dade2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 8px 32px rgba(31, 110, 140, 0.4);
+            letter-spacing: -2px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #a0d8ff;
+            font-size: 1.3em;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Modern cards with gradient borders */
+        .auth-card {
+            background: rgba(15, 35, 60, 0.3);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 10, 30, 0.4), 
+                        inset 0 0 12px rgba(100, 200, 255, 0.1);
+            width: 100%;
+            max-width: 420px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .auth-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 15, 40, 0.5), 
+                        inset 0 0 15px rgba(100, 200, 255, 0.15);
+        }
+        
+        .auth-card h2 {
+            text-align: center;
+            background: linear-gradient(135deg, #a0d8ff 0%, #5dade2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 30px;
+            font-size: 2em;
+            font-weight: 700;
+        }
+        
+        .auth-card input {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            background: rgba(10, 25, 47, 0.4);
+            color: #e6f7ff;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-card input:focus {
+            outline: none;
+            border-color: #5dade2;
+            box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.2);
+        }
+        
+        .auth-card input::placeholder {
+            color: rgba(160, 216, 255, 0.5);
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #1e5799 0%, #20a0d8 50%, #2989d8 100%);
+            border: none;
+            color: #e6f7ff;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(31, 110, 140, 0.5);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            margin-top: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #219d54 0%, #27ae60 100%);
+        }
+        
+        /* Animated background gradient */
+        .login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            animation: gradientShift 15s ease infinite;
+            background: radial-gradient(ellipse at center, rgba(20, 60, 100, 0.1) 0%, transparent 70%);
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        /* Forum layout */
+        .forum-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .sidebar {
+            background: rgba(15, 35, 60, 0.3);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            height: fit-content;
+            position: sticky;
+            top: 30px;
+            box-shadow: 0 4px 20px rgba(0, 10, 30, 0.3);
+        }
+        
+        .sidebar h3 {
+            color: #a0d8ff;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+        
+        .sidebar-btn {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: linear-gradient(135deg, #1e5799 0%, #20a0d8 100%);
+            border: none;
+            color: #e6f7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .sidebar-btn:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(31, 110, 140, 0.4);
+        }
+        
+        .sidebar-btn.logout {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+        }
+        
+        .user-info {
+            background: rgba(20, 50, 80, 0.3);
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(100, 200, 255, 0.1);
+        }
+        
+        .user-info p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        
+        .user-info .role {
+            font-weight: 700;
+            color: #5dade2;
+            font-size: 16px;
+        }
+        
+        /* Tickets section */
+        .tickets-section {
+            background: rgba(15, 35, 60, 0.3);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 10, 30, 0.3);
+        }
+        
+        .tickets-section h2 {
+            color: #a0d8ff;
+            margin-bottom: 25px;
+            font-size: 2em;
+            font-weight: 700;
+        }
+        
+        .ticket-item {
+            background: rgba(20, 50, 80, 0.3);
+            border: 1px solid rgba(100, 200, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .ticket-item:hover {
+            transform: translateY(-5px) translateX(5px);
+            box-shadow: 0 10px 30px rgba(31, 110, 140, 0.3);
+            border-color: rgba(100, 200, 255, 0.4);
+            background: rgba(25, 65, 100, 0.4);
+        }
+        
+        .ticket-item.unread {
+            border-left: 4px solid #5dade2;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(93, 173, 226, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(93, 173, 226, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(93, 173, 226, 0); }
+        }
+        
+        .ticket-item.resolved {
+            opacity: 0.5;
+        }
+        
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .ticket-title {
+            font-weight: 700;
+            color: #e6f7ff;
+            font-size: 1.2em;
+        }
+        
+        .ticket-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .status-open { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .status-answered { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .status-resolved { background: linear-gradient(135deg, #27ae60, #219d54); }
+        
+        .ticket-meta {
+            font-size: 13px;
+            color: #5dade2;
+            font-weight: 500;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: rgba(15, 35, 60, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            border-radius: 20px;
+            max-width: 850px;
+            width: 90%;
+            max-height: 85vh;
+            margin: 50px auto;
+            padding: 30px;
+            color: #e6f7ff;
+            position: relative;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 10, 30, 0.5);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 35px;
+            cursor: pointer;
+            color: #a0d8ff;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .modal-close:hover {
+            color: #e6f7ff;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        .ticket-messages {
+            margin-top: 25px;
+        }
+        
+        .message {
+            background: rgba(20, 50, 80, 0.4);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+            border-left: 4px solid #5dade2;
+            animation: messageIn 0.4s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .message.admin {
+            border-left: 4px solid #1e5799;
+            background: rgba(30, 87, 153, 0.4);
+        }
+        
+        .message-owner {
+            font-weight: 700;
+            color: #a0d8ff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .message-text {
+            color: #e6f7ff;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            font-size: 15px;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            color: #5dade2;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        
+        .reply-form {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(100, 200, 255, 0.2);
+        }
+        
+        .reply-form textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            background: rgba(10, 25, 47, 0.4);
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            border-radius: 10px;
+            color: #e6f7ff;
+            font-family: inherit;
+            font-size: 15px;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        
+        .reply-form textarea:focus {
+            outline: none;
+            border-color: #5dade2;
+            box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.2);
+        }
+        
+        .reply-form button {
+            margin-top: 12px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #1e5799, #20a0d8);
+            border: none;
+            color: #e6f7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .reply-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(31, 110, 140, 0.4);
+        }
+        
+        .reply-form button:last-child {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+        
+        /* Admin panel */
+        .admin-panel {
+            display: none;
+            background: rgba(15, 35, 60, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 10, 30, 0.3);
+            border-left: 4px solid #f39c12;
+        }
+        
+        .admin-panel h3 {
+            color: #f39c12;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-management {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(20, 50, 80, 0.3);
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(100, 200, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .user-item:hover {
+            background: rgba(30, 70, 110, 0.3);
+            transform: translateX(5px);
+        }
+        
+        .user-item button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .user-item button:hover {
+            transform: scale(1.05);
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: 600;
+            animation: slideDown 0.5s ease;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Footer */
+        .footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 30px;
+            color: #a0d8ff;
+            margin-top: 50px;
+            background: rgba(10, 25, 47, 0.3);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(100, 200, 255, 0.1);
+        }
+        
+        .footer p {
+            margin: 5px 0;
+            font-weight: 500;
+        }
+        
+        /* Responsive */
+        @media (max-width: 968px) {
+            .forum-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                order: 2;
+            }
+            
+            .header h1 {
+                font-size: 2.5em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .auth-card {
+                padding: 30px 20px;
+            }
+        }
+        
+        /* Hidden class */
+        .forum-hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Улучшенная анимация падающего снега -->
+    <div class="snowflakes" id="snowflakes"></div>
+    
+    <div class="header">
+        <h1>❄️ AltShield ❄️</h1>
+        <p>Зимний Технический Форум — 2024</p>
+    </div>
+    
+    <div class="container">
+        <!-- СТРАНИЦА ВХОДА -->
+        <div class="login-page" id="loginPage">
+            <div class="auth-card">
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <h2>🔐 Вход в систему</h2>
+                    
+                    <!-- Отладочная информация -->
+                    <div id="debugInfo" style="background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; border-radius: 8px; padding: 10px; margin-bottom: 15px; display: none;">
+                        <strong>Ошибка:</strong> <span id="errorText"></span>
+                    </div>
+                    
+                    <input id="loginUsername" placeholder="Логин" required type="text">
+                    <input id="loginPassword" placeholder="Пароль" required type="password">
+                    <button class="btn-primary" type="submit">Войти →</button>
+                    
+                    <!-- Быстрый тестовый вход -->
+                    <button class="btn-secondary" onclick="quickTestLogin()" style="margin-top: 10px;">
+                        ⚡ Тестовый вход (Владелец)
+                    </button>
+                    
+                    <p style="margin-top: 20px; text-align: center; color: #5dade2; font-weight: 500;">
+                        Нет аккаунта? <a href="#" onclick="showRegister(); return false;" style="color: #a0d8ff; font-weight: 600;">Зарегистрироваться</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+        
+        <!-- СТРАНИЦА РЕГИСТРАЦИИ -->
+        <div class="login-page forum-hidden" id="registerPage">
+            <div class="auth-card">
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <h2>📝 Регистрация</h2>
+                    <input id="regUsername" placeholder="Логин (мин. 3 символа)" required type="text" minlength="3">
+                    <input id="regPassword" placeholder="Пароль (мин. 6 символов)" required type="password" minlength="6">
+                    <button class="btn-primary" type="submit">Создать аккаунт</button>
+                    <button class="btn-secondary" onclick="showLogin()" style="background: #555;">← Назад</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- ФОРУМ -->
+        <div class="forum-hidden" id="forumPage">
+            <div class="forum-grid">
+                <div class="sidebar">
+                    <div class="user-info">
+                        <p><strong>Пользователь:</strong> <span id="currentUser">Гость</span></p>
+                        <p class="role"><span id="userRole">Гость</span></p>
+                    </div>
+                    <button class="sidebar-btn" onclick="createTicket()">➕ Создать тикет</button>
+                    <button class="sidebar-btn logout" onclick="logout()">🚪 Выйти</button>
+                </div>
+                
+                <div>
+                    <!-- Админ панель -->
+                    <div class="admin-panel" id="adminPanel">
+                        <h3>🛡️ Панель владельца</h3>
+                        <div class="success-message" id="adminSuccess"></div>
+                        <div class="user-management" id="userManagement"></div>
+                    </div>
+                    
+                    <!-- Список тикетов -->
+                    <div class="tickets-section">
+                        <h2>📨 Тикеты поддержки</h2>
+                        <div id="ticketsList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно тикета -->
+    <div class="modal" id="ticketModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTicketTitle"></h2>
+            <div class="ticket-messages" id="ticketMessages"></div>
+            <div class="reply-form" id="replyForm">
+                <textarea id="replyText" placeholder="Введите ваш ответ..."></textarea>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="sendReply()">Отправить</button>
+                    <button id="resolveBtn" onclick="resolveTicket()" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">Закрыть тикет</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Скрипты -->
+    <script>
+        // ==================== НАСТРОЙКИ ====================
+        const OWNER_LOGIN = "kjuvboltm098";
+        const OWNER_PASSWORD = "artik098";
+        
+        // ==================== ПРОВЕРКА localStorage ====================
+        function checkStorage() {
+            try {
+                const test = 'test';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch(e) {
+                return false;
+            }
+        }
+        
+        if (!checkStorage()) {
+            alert('❌ localStorage заблокирован!\n\n⚠️ Используйте локальный сервер:\n1. Установите Python\n2. В папке с файлом запустите: python -m http.server 8000\n3. Откройте: http://localhost:8000');
+            window.location.href = 'about:blank';
+        }
+        
+        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+        function initData() {
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            
+            if (!users[OWNER_LOGIN]) {
+                users[OWNER_LOGIN] = {
+                    password: OWNER_PASSWORD,
+                    role: "owner"
+                };
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+            
+            if (!localStorage.getItem('tickets')) {
+                localStorage.setItem('tickets', JSON.stringify([]));
+            }
+            
+            if (!localStorage.getItem('nextTicketId')) {
+                localStorage.setItem('nextTicketId', '1');
+            }
+        }
+        
+        initData();
+        
+        // ==================== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ====================
+        let currentUser = null;
+        let currentTicket = null;
+        
+        // ==================== АНИМАЦИЯ СНЕГА ====================
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.innerHTML = '❄';
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            snowflake.style.opacity = Math.random();
+            snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            document.getElementById('snowflakes').appendChild(snowflake);
+            setTimeout(() => snowflake.remove(), 5000);
+        }
+        
+        setInterval(createSnowflake, 200);
+        
+        // ==================== УПРАВЛЕНИЕ СТРАНИЦАМИ ====================
+        function showError(message) {
+            const debugDiv = document.getElementById('debugInfo');
+            document.getElementById('errorText').textContent = message;
+            debugDiv.style.display = 'block';
+            setTimeout(() => debugDiv.style.display = 'none', 5000);
+        }
+        
+        function showLogin() {
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('registerPage').classList.add('forum-hidden');
+            document.getElementById('forumPage').classList.add('forum-hidden');
+        }
+        
+        function showRegister() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').classList.remove('forum-hidden');
+            document.getElementById('forumPage').classList.add('forum-hidden');
+        }
+        
+        function showForum() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').classList.add('forum-hidden');
+            document.getElementById('forumPage').classList.remove('forum-hidden');
+            
+            const users = JSON.parse(localStorage.getItem('users'));
+            const userData = users[currentUser];
+            
+            document.getElementById('currentUser').textContent = currentUser;
+            document.getElementById('userRole').textContent = {
+                'owner': '👑 Владелец',
+                'admin': '🛡️ Администратор',
+                'user': '👤 Пользователь'
+            }[userData.role];
+            
+            if (userData.role === 'owner') {
+                document.getElementById('adminPanel').style.display = 'block';
+                loadAdminPanel();
+            } else {
+                document.getElementById('adminPanel').style.display = 'none';
+            }
+            
+            loadTickets();
+        }
+        
+        // ==================== БЫСТРЫЙ ВХОД ====================
+        function quickTestLogin() {
+            document.getElementById('loginUsername').value = OWNER_LOGIN;
+            document.getElementById('loginPassword').value = OWNER_PASSWORD;
+            handleLogin({ preventDefault: () => {} });
+        }
+        
+        // ==================== РЕГИСТРАЦИЯ ====================
+        function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            
+            if (username.length < 3) {
+                alert('❌ Минимум 3 символа для логина!');
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert('❌ Минимум 6 символов для пароля!');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users'));
+            
+            if (users[username]) {
+                alert('❌ Пользователь уже существует!');
+                return;
+            }
+            
+            users[username] = { password, role: "user" };
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            alert('✅ Регистрация успешна!');
+            document.getElementById('registerForm').reset();
+            showLogin();
+        }
+        
+        // ==================== ВХОД ====================
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                showError('Введите логин и пароль!');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users'));
+            
+            if (!users[username]) {
+                showError(`Пользователь "${username}" не найден!`);
+                return;
+            }
+            
+            if (users[username].password !== password) {
+                showError('Неверный пароль!');
+                return;
+            }
+            
+            currentUser = username;
+            document.getElementById('loginForm').reset();
+            showForum();
+        }
+        
+        // ==================== ВЫХОД ====================
+        function logout() {
+            if (confirm('🚪 Выйти из аккаунта?')) {
+                currentUser = null;
+                currentTicket = null;
+                showLogin();
+            }
+        }
+        
+        // ==================== ТИКЕТЫ ====================
+        function createTicket() {
+            const title = prompt('📝 Тема тикета (мин. 5 символов):');
+            if (!title || title.trim().length < 5) {
+                alert('❌ Минимум 5 символов!');
+                return;
+            }
+            
+            const message = prompt('💬 Описание проблемы (мин. 10 символов):');
+            if (!message || message.trim().length < 10) {
+                alert('❌ Минимум 10 символов!');
+                return;
+            }
+            
+            const tickets = JSON.parse(localStorage.getItem('tickets'));
+            const ticketId = localStorage.getItem('nextTicketId');
+            
+            const newTicket = {
+                id: ticketId,
+                title: title.trim(),
+                author: currentUser,
+                status: 'open',
+                createdAt: new Date().toISOString(),
+                messages: [{
+                    author: currentUser,
+                    text: message.trim(),
+                    timestamp: new Date().toISOString(),
+                    isAdmin: false
+                }]
+            };
+            
+            tickets.push(newTicket);
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+            localStorage.setItem('nextTicketId', (parseInt(ticketId) + 1).toString());
+            
+            alert('✅ Тикет создан успешно!');
+            loadTickets();
+        }
+        
+        function loadTickets() {
+            const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+            const container = document.getElementById('ticketsList');
+            const users = JSON.parse(localStorage.getItem('users'));
+            const userRole = users[currentUser].role;
+            
+            let filteredTickets = tickets;
+            
+            if (userRole !== 'owner' && userRole !== 'admin') {
+                filteredTickets = tickets.filter(t => t.author === currentUser);
+            }
+            
+            container.innerHTML = '';
+            
+            if (filteredTickets.length === 0) {
+                container.innerHTML = '<p style="color: #5dade2; text-align: center;">Тикетов нет. Создайте первый!</p>';
+                return;
+            }
+            
+            filteredTickets.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            filteredTickets.forEach(ticket => {
+                const ticketDiv = document.createElement('div');
+                ticketDiv.className = `ticket-item ${ticket.status === 'resolved' ? 'resolved' : ''} ${ticket.status === 'answered' && ticket.author === currentUser ? 'unread' : ''}`;
+                ticketDiv.onclick = () => openTicket(ticket.id);
+                
+                const statusText = {
+                    'open': 'Открыт',
+                    'answered': 'Отвечен',
+                    'resolved': 'Решен'
+                };
+                
+                const msgCount = ticket.messages.length;
+                
+                ticketDiv.innerHTML = `
+                    <div class="ticket-header">
+                        <span class="ticket-title">${ticket.title}</span>
+                        <span class="ticket-status status-${ticket.status}">${statusText[ticket.status]}</span>
+                    </div>
+                    <div class="ticket-meta">
+                        Автор: ${ticket.author} | Сообщений: ${msgCount} | Создан: ${new Date(ticket.createdAt).toLocaleString()}
+                    </div>
+                `;
+                
+                container.appendChild(ticketDiv);
+            });
+        }
+        
+        function openTicket(ticketId) {
+            const tickets = JSON.parse(localStorage.getItem('tickets'));
+            currentTicket = tickets.find(t => t.id === ticketId);
+            
+            if (!currentTicket) {
+                showError('Тикет не найден!');
+                return;
+            }
+            
+            document.getElementById('modalTicketTitle').textContent = `#${currentTicket.id}: ${currentTicket.title}`;
+            
+            const messagesContainer = document.getElementById('ticketMessages');
+            messagesContainer.innerHTML = '';
+            
+            currentTicket.messages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.isAdmin ? 'admin' : ''}`;
+                
+                messageDiv.innerHTML = `
+                    <div class="message-owner">${msg.author} ${msg.isAdmin ? '(Администратор)' : ''}</div>
+                    <div class="message-text">${msg.text}</div>
+                    <div class="message-time">${new Date(msg.timestamp).toLocaleString()}</div>
+                `;
+                
+                messagesContainer.appendChild(messageDiv);
+            });
+            
+            setTimeout(() => {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 100);
+            
+            const userRole = JSON.parse(localStorage.getItem('users'))[currentUser].role;
+            const canReply = userRole === 'owner' || userRole === 'admin' || currentTicket.author === currentUser;
+            
+            document.getElementById('replyForm').style.display = canReply && currentTicket.status !== 'resolved' ? 'block' : 'none';
+            document.getElementById('resolveBtn').style.display = (userRole === 'owner' || userRole === 'admin') && currentTicket.status !== 'resolved' ? 'inline-block' : 'none';
+            
+            if (currentTicket.status === 'answered' && currentTicket.author === currentUser) {
+                currentTicket.status = 'open';
+                localStorage.setItem('tickets', JSON.stringify(tickets));
+                loadTickets();
+            }
+            
+            document.getElementById('ticketModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('ticketModal').style.display = 'none';
+            document.getElementById('replyText').value = '';
+            currentTicket = null;
+        }
+        
+        function sendReply() {
+            const text = document.getElementById('replyText').value.trim();
+            if (!text) {
+                alert('❌ Введите текст сообщения!');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users'));
+            const userRole = users[currentUser].role;
+            const isAdmin = userRole === 'owner' || userRole === 'admin';
+            
+            currentTicket.messages.push({
+                author: currentUser,
+                text: text,
+                timestamp: new Date().toISOString(),
+                isAdmin: isAdmin
+            });
+            
+            currentTicket.status = isAdmin ? 'answered' : 'open';
+            
+            const tickets = JSON.parse(localStorage.getItem('tickets'));
+            const index = tickets.findIndex(t => t.id === currentTicket.id);
+            tickets[index] = currentTicket;
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+            
+            document.getElementById('replyText').value = '';
+            openTicket(currentTicket.id);
+            loadTickets();
+        }
+        
+        function resolveTicket() {
+            if (!confirm('❓ Закрыть тикет? Это действие нельзя отменить.')) return;
+            
+            currentTicket.status = 'resolved';
+            currentTicket.resolvedAt = new Date().toISOString();
+            
+            const tickets = JSON.parse(localStorage.getItem('tickets'));
+            const index = tickets.findIndex(t => t.id === currentTicket.id);
+            tickets[index] = currentTicket;
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+            
+            alert('✅ Тикет закрыт!');
+            closeModal();
+            loadTickets();
+        }
+        
+        // ==================== АДМИН ПАНЕЛЬ ====================
+        function loadAdminPanel() {
+            const users = JSON.parse(localStorage.getItem('users'));
+            const container = document.getElementById('userManagement');
+            
+            container.innerHTML = '';
+            
+            Object.keys(users).forEach(username => {
+                if (username === currentUser) return;
+                
+                const userDiv = document.createElement('div');
+                userDiv.className = 'user-item';
+                
+                const roleText = {
+                    'owner': '👑 Владелец',
+                    'admin': '🛡️ Администратор',
+                    'user': '👤 Пользователь'
+                };
+                
+                userDiv.innerHTML = `
+                    <span><strong>${username}</strong> - ${roleText[users[username].role]}</span>
+                    ${users[username].role !== 'owner' ? 
+                        `<button onclick="toggleAdmin('${username}')" style="background: ${users[username].role === 'admin' ? '#e74c3c' : '#27ae60'}; color: white;">
+                            ${users[username].role === 'admin' ? '❌ Убрать' : '✓ Сделать админом'}
+                        </button>` : ''
+                    }
+                `;
+                
+                container.appendChild(userDiv);
+            });
+        }
+        
+        function toggleAdmin(username) {
+            const users = JSON.parse(localStorage.getItem('users'));
+            users[username].role = users[username].role === 'admin' ? 'user' : 'admin';
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            const success = document.getElementById('adminSuccess');
+            success.textContent = `✅ Роль пользователя ${username} обновлена!`;
+            success.style.display = 'block';
+            
+            setTimeout(() => success.style.display = 'none', 3000);
+            
+            loadAdminPanel();
+            loadTickets();
+        }
+        
+        // ==================== ОБРАБОТЧИКИ ====================
+        window.addEventListener('load', () => {
+            console.log('✅ AltShield форум загружен!');
+            console.log('💡 Нажмите "Тестовый вход" или используйте:'); 
+            console.log('   Логин: kjuvboltm098'); 
+            console.log('   Пароль: artik098');
+        });
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('ticketModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+</body>
+</html>
